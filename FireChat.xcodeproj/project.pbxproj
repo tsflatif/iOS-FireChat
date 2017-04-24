@@ -7,23 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		438BCFB81EAD8AA6006C5FFB /* ChatScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BCFB71EAD8AA6006C5FFB /* ChatScreenVC.swift */; };
 		43B0BC5D1EA9A05F001634C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0BC5C1EA9A05F001634C5 /* AppDelegate.swift */; };
-		43B0BC5F1EA9A05F001634C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0BC5E1EA9A05F001634C5 /* ViewController.swift */; };
 		43B0BC621EA9A05F001634C5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43B0BC601EA9A05F001634C5 /* Main.storyboard */; };
 		43B0BC651EA9A05F001634C5 /* FireChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 43B0BC631EA9A05F001634C5 /* FireChat.xcdatamodeld */; };
 		43B0BC671EA9A05F001634C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43B0BC661EA9A05F001634C5 /* Assets.xcassets */; };
 		43B0BC6A1EA9A05F001634C5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43B0BC681EA9A05F001634C5 /* LaunchScreen.storyboard */; };
+		43B0BC721EAD89F8001634C5 /* LogInVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0BC711EAD89F8001634C5 /* LogInVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		438BCFB71EAD8AA6006C5FFB /* ChatScreenVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatScreenVC.swift; sourceTree = "<group>"; };
 		43B0BC591EA9A05F001634C5 /* FireChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FireChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43B0BC5C1EA9A05F001634C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		43B0BC5E1EA9A05F001634C5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		43B0BC611EA9A05F001634C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		43B0BC641EA9A05F001634C5 /* FireChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FireChat.xcdatamodel; sourceTree = "<group>"; };
 		43B0BC661EA9A05F001634C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		43B0BC691EA9A05F001634C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		43B0BC6B1EA9A05F001634C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		43B0BC711EAD89F8001634C5 /* LogInVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogInVC.swift; path = ../LogInVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,9 +58,10 @@
 		43B0BC5B1EA9A05F001634C5 /* FireChat */ = {
 			isa = PBXGroup;
 			children = (
+				43B0BC711EAD89F8001634C5 /* LogInVC.swift */,
 				43B0BC5C1EA9A05F001634C5 /* AppDelegate.swift */,
-				43B0BC5E1EA9A05F001634C5 /* ViewController.swift */,
 				43B0BC601EA9A05F001634C5 /* Main.storyboard */,
+				438BCFB71EAD8AA6006C5FFB /* ChatScreenVC.swift */,
 				43B0BC661EA9A05F001634C5 /* Assets.xcassets */,
 				43B0BC681EA9A05F001634C5 /* LaunchScreen.storyboard */,
 				43B0BC6B1EA9A05F001634C5 /* Info.plist */,
@@ -99,6 +102,7 @@
 				TargetAttributes = {
 					43B0BC581EA9A05F001634C5 = {
 						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = GYLD5Y8V2T;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -139,9 +143,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43B0BC5F1EA9A05F001634C5 /* ViewController.swift in Sources */,
 				43B0BC651EA9A05F001634C5 /* FireChat.xcdatamodeld in Sources */,
 				43B0BC5D1EA9A05F001634C5 /* AppDelegate.swift in Sources */,
+				438BCFB81EAD8AA6006C5FFB /* ChatScreenVC.swift in Sources */,
+				43B0BC721EAD89F8001634C5 /* LogInVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +271,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = GYLD5Y8V2T;
 				INFOPLIST_FILE = FireChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tlatif.FireChat;
@@ -278,6 +284,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = GYLD5Y8V2T;
 				INFOPLIST_FILE = FireChat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tlatif.FireChat;
@@ -305,6 +312,7 @@
 				43B0BC701EA9A05F001634C5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
