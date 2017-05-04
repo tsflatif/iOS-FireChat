@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import GoogleSignIn
+import Firebase
 
-class LogInVC: UIViewController {
+class LogInVC: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate {
 
     @IBOutlet weak var anonymousButton: UIButton!
     override func viewDidLoad() {
@@ -16,6 +18,10 @@ class LogInVC: UIViewController {
 
         anonymousButton.layer.borderWidth = 2.0
         anonymousButton.layer.borderColor = UIColor.white.cgColor
+        //GIDSignIn.sharedInstance().clientID = "1093412190666-tcdc85b8m6pro00ksqlh0ga5083hj16v.apps.googleusercontent.com"
+        GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
+        GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,21 +29,17 @@ class LogInVC: UIViewController {
     }
 
     @IBAction func loginAnonymousTapped(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let naviVC = storyboard.instantiateViewController(withIdentifier: "NavigationVC") as! UINavigationController
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        appDelegate.window?.rootViewController = naviVC
+        Helper.helper.loginAnonymousTapped()
+    
         
     }
 
     @IBAction func googleLoginTapped(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let naviVC = storyboard.instantiateViewController(withIdentifier: "NavigationVC") as! UINavigationController
+        GIDSignIn.sharedInstance().signIn()
         
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        appDelegate.window?.rootViewController = naviVC
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        Helper.helper.logInWithGoogle(authentication: user.authentication)
     }
 }
