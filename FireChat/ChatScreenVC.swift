@@ -11,11 +11,13 @@ import JSQMessagesViewController
 import MobileCoreServices
 import AVKit
 import FirebaseDatabase
+import FirebaseStorage
+import FirebaseAuth
+
 
 class ChatScreenVC: JSQMessagesViewController {
     
     var messages = [JSQMessage]()
-    
     var messageRef = FIRDatabase.database().reference().child("messages")
 
     override func viewDidLoad() {
@@ -35,15 +37,50 @@ class ChatScreenVC: JSQMessagesViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        FIRAuth.auth()?.addStateDidChangeListener({ (auth: FIRAuth, user: FIRUser?) in
+            if user != nil {
+                Helper.helper.switchToNavigationViewController()
+            } else {
+                
+            }
+        })
+    }
+    
     func observeMessages() {
         messageRef.observe(FIRDataEventType.childAdded) { (snapshot: FIRDataSnapshot) in
             if let dict = snapshot.value as? [String: Any] {
-                let MediaType = dict["MediaType"] as! String
+                let mediaType = dict["MediaType"] as! String
                 let senderId = dict["senderId"] as! String
                 let senderName = dict["senderName"] as! String
-                let text = dict["text"] as! String
                 
-                self.messages.append(JSQMessage(senderId: senderId, displayName: senderName, text: text))
+                switch mediaType {
+                    case "TEXT":
+                        
+                        let text = dict["text"] as! String
+                        self.messages.append(JSQMessage(senderId: senderId, displayName: senderName, text: text))
+                    
+                    case "PHOTO":
+                        
+                        let fileUrl = dict["fileUr"] as! String
+                        let url = URL(string: fileUrl)
+                        guard let data = try? Data(contentsOf: url!) else {return}
+                        let picture = UIImage(data: data)
+                        let photo = JSQPhotoMediaItem(image: picture)
+                        self.messages.append(JSQMessage(senderId: senderId, displayName: senderName, media: photo))
+                    
+                    case "VIDEO":
+                        
+                        let fileUrl = dict["fileUrl"] as! String
+                        let video = URL(string: fileUrl)
+                        let videoItem = JSQVideoMediaItem(fileURL: video, isReadyToPlay: true)
+                        self.messages.append(JSQMessage(senderId: senderId, displayName: senderName, media: videoItem))
+                    
+                default:
+                    print("Unkown data type")
+                }
+                
                 self.collectionView.reloadData()
             }
             
@@ -123,9 +160,13 @@ class ChatScreenVC: JSQMessagesViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     @IBAction func logoutTapped(_ sender: Any) {
+        do {
+            try FIRAuth.auth()?.signOut()
+        } catch let error {
+            print(error)
+        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let LogInVC = storyboard.instantiateViewController(withIdentifier: "LogInVC") as! LogInVC
         
@@ -135,16 +176,40 @@ class ChatScreenVC: JSQMessagesViewController {
 
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func sendMedia(picture: UIImage?, video: URL?) {
+        if let picture = picture {
+            let filePath = "\(FIRAuth.auth()!.currentUser!)/\(NSDate.timeIntervalSinceReferenceDate)"
+            let data = UIImageJPEGRepresentation(picture, 0.1)
+            let metadata = FIRStorageMetadata()
+            metadata.contentType = "image/jpg"
+            FIRStorage.storage().reference().child(filePath).put(data!, metadata: metadata) { (metadata, error) in
+                if error != nil {
+                    print(error?.localizedDescription ?? "damn!!")
+                    return
+                }
+                let fileUrl = metadata?.downloadURLs?[0].absoluteString
+                let newMessage = self.messageRef.childByAutoId()
+                let messageData = ["fileUrl": fileUrl, "senderId": self.senderId, "senderName": self.senderDisplayName, "mediaType": "PHOTO"]
+                newMessage.setValue(messageData)
+            }
+        } else if let video = video {
+            let filePath = "\(FIRAuth.auth()!.currentUser!)/\(NSDate.timeIntervalSinceReferenceDate)"
+            guard let data = try? Data(contentsOf: video) else {return}
+            let metadata = FIRStorageMetadata()
+            metadata.contentType = "video/mp4 "
+            FIRStorage.storage().reference().child(filePath).put(data, metadata: metadata) { (metadata, error) in
+                if error != nil {
+                    print(error?.localizedDescription ?? "damn!!")
+                    return
+                }
+                let fileUrl = metadata?.downloadURLs?[0].absoluteString
+                let newMessage = self.messageRef.childByAutoId()
+                let messageData = ["fileUrl": fileUrl, "senderId": self.senderId, "senderName": self.senderDisplayName, "mediaType": "VIDEO"]
+                newMessage.setValue(messageData)
+            }
+        }
+        
     }
-    */
 
 }
 
@@ -152,13 +217,13 @@ extension ChatScreenVC: UIImagePickerControllerDelegate, UINavigationControllerD
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let picture = info[UIImagePickerControllerOriginalImage] as? UIImage {
             let photo = JSQPhotoMediaItem(image: picture)
-            
             messages.append(JSQMessage(senderId: senderId, displayName: senderDisplayName, media: photo))
-
+            sendMedia(picture: picture, video: nil)
         }
         else if let video = info[UIImagePickerControllerMediaURL] as? URL {
             let videoItem = JSQVideoMediaItem(fileURL: video, isReadyToPlay: true)
             messages.append(JSQMessage(senderId: senderId, displayName: senderDisplayName, media: videoItem))
+            sendMedia(picture: nil, video: video)
         }
         
         self.dismiss(animated: true, completion: nil)
