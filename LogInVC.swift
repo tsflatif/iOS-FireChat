@@ -9,6 +9,7 @@
 import UIKit
 import GoogleSignIn
 import Firebase
+import FirebaseAuth
 
 class LogInVC: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate {
 
@@ -18,10 +19,21 @@ class LogInVC: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate {
 
         anonymousButton.layer.borderWidth = 2.0
         anonymousButton.layer.borderColor = UIColor.white.cgColor
-        //GIDSignIn.sharedInstance().clientID = "1093412190666-tcdc85b8m6pro00ksqlh0ga5083hj16v.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+//        FIRAuth.auth()?.addStateDidChangeListener({ (auth: FIRAuth, user: FIRUser?) in
+//            if user != nil {
+//                Helper.helper.switchToNavigationViewController()
+//            } else {
+//                print("Unauthorized")
+//            }
+//        })
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,13 +42,10 @@ class LogInVC: UIViewController, GIDSignInUIDelegate, GIDSignInDelegate {
 
     @IBAction func loginAnonymousTapped(_ sender: Any) {
         Helper.helper.loginAnonymousTapped()
-    
-        
     }
 
     @IBAction func googleLoginTapped(_ sender: Any) {
         GIDSignIn.sharedInstance().signIn()
-        
     }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
